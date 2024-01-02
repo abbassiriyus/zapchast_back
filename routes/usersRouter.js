@@ -3,7 +3,96 @@ const router = express.Router();
 const pool = require('../db.js');
 
 
+router.post('/send-email', async (req, res) => {
+  const { email } = req.body;
 
+  try {
+    // PostgreSQL veritabanından kullanıcıyı sorgula
+    const query = 'SELECT * FROM users WHERE email = $1';
+    const result = await pool.query(query, [email]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+    }
+
+    const user = result.rows[0];
+    const {  password } = user;
+    // E-posta gönderme işlemini gerçekleştirin
+    sendEmail(email,password);
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Veritabanı hatası:', error);
+    res.sendStatus(500);
+  }
+});
+
+
+
+
+router.post('/register', async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+
+    // add some basic validation
+    if (!name || !email || !password) throw new Error('All fields are required.');
+
+    const hashedPassword = password
+    const user = {
+      name: name,
+      email: email,
+      password: hashedPassword
+    }
+    const jwtToken = jwt.sign(user, SECRET);
+
+    var { rows }=await pool.query('INSERT INTO users (email,password,name,token) VALUES ($1, $2, $3, $4 ) RETURNING *', [email, hashedPassword, name, jwtToken]);
+    console.log(rows);
+    res.json({ token: jwtToken, data:rows});
+    // const newEntry = await pool.query(
+    //   'INSERT INTO janr (cinema_id, title) VALUES ($1, $2) RETURNING *',
+    //   [cinema_id, title]
+    // );
+    // res.json(newEntry.rows[0]);
+  } catch (err) {
+    // set status code to 400 for client errors and provide error message
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // add some basic validation
+    if (!email || !password) throw new Error('Email and password are required.');
+
+    // Get user from the database
+    const userRes = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = userRes.rows[0];
+
+    // Check if User exists
+    if (!user) {
+      return res.status(400).json({ error: 'User does not exist.' })
+    }
+
+    // Compare passwords
+    // const passwordMatch = await bcrypt.compare(password,);
+    if (password != user.password) {
+      return res.status(400).json({ error: 'Incorrect password.' });
+    }
+
+    // Create token with API secret
+    const jwtToken = jwt.sign({ id: user.id, name: user.name, email: email }, SECRET, { expiresIn: '1h' });
+    pool.query('UPDATE users SET token=$1 WHERE id = $2', [jwtToken, user.id])
+
+    // Send back the token
+    res.json({ token: jwtToken, message: 'You have successfully logged in!' });
+
+  } catch (err) {
+    // set status code to 400 for client errors and provide error message
+    res.status(400).json({ error: err.message });
+  }
+});
 // Hamma foydalanuvchilarni olish
 router.get('/users', async (req, res) => {
   try {
