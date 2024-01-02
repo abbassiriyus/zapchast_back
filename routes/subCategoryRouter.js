@@ -1,5 +1,6 @@
 const pool = require('../db'); 
 const express = require('express');
+const { upload_file, put_file, delete_file } = require('../middleware/file_upload');
 const router = express.Router();
 
 
@@ -37,8 +38,8 @@ router.get('/subcategories/:id', async (req, res) => {
 
 // Subkategoriyani qo'shish
 router.post('/subcategories', async (req, res) => {
-  const { category_id, title, image } = req.body;
-
+  const { category_id, title } = req.body;
+  var image=upload_file(req)
   try {
     const query = 'INSERT INTO subcategories (category_id, title, image) VALUES ($1, $2, $3) RETURNING *';
     const { rows } = await pool.query(query, [category_id, title, image]);
@@ -53,9 +54,12 @@ router.post('/subcategories', async (req, res) => {
 // Subkategoriyani yangilash
 router.put('/subcategories/:id', async (req, res) => {
   const { id } = req.params;
-  const { category_id, title, image } = req.body;
-
+  const { category_id, title } = req.body;
+  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const result = await pool.query(query2, [id]);
   try {
+
+    var image=put_file(result.rows[0].image,req) 
     const query = 'UPDATE subcategories SET category_id = $1, title = $2, image = $3, time_update = current_timestamp WHERE id = $4 RETURNING *';
     const { rows } = await pool.query(query, [category_id, title, image, id]);
 
@@ -77,7 +81,7 @@ router.delete('/subcategories/:id', async (req, res) => {
   try {
     const query = 'DELETE FROM subcategories WHERE id = $1 RETURNING *';
     const { rows } = await pool.query(query, [id]);
-
+    delete_file(rows.image)
     if (rows.length === 0) {
       res.status(404).json({ error: 'Subkategoria topilmadi' });
     } else {

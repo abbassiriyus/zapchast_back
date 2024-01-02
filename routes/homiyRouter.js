@@ -1,5 +1,6 @@
 const pool = require('../db'); 
 const express = require('express');
+const { put_file, upload_file, delete_file } = require('../middleware/file_upload');
 const router = express.Router();
 
 
@@ -37,8 +38,8 @@ router.get('/homiy/:id', async (req, res) => {
 
 // Homiy elementini qo'shish
 router.post('/homiy', async (req, res) => {
-  const { link, image } = req.body;
-
+  const { link } = req.body;
+  var image=upload_file(req)
   try {
     const query = 'INSERT INTO homiy (link, image) VALUES ($1, $2) RETURNING *';
     const { rows } = await pool.query(query, [link, image]);
@@ -53,9 +54,11 @@ router.post('/homiy', async (req, res) => {
 // Homiy elementini yangilash
 router.put('/homiy/:id', async (req, res) => {
   const { id } = req.params;
-  const { link, image } = req.body;
-
+  const { link } = req.body;
+  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const result = await pool.query(query2, [id]);
   try {
+    var image=put_file(result.rows[0].image,req) 
     const query = 'UPDATE homiy SET link = $1, image = $2, time_update = current_timestamp WHERE id = $3 RETURNING *';
     const { rows } = await pool.query(query, [link, image, id]);
 
@@ -77,7 +80,7 @@ router.delete('/homiy/:id', async (req, res) => {
   try {
     const query = 'DELETE FROM homiy WHERE id = $1 RETURNING *';
     const { rows } = await pool.query(query, [id]);
-
+    delete_file(rows.image)
     if (rows.length === 0) {
       res.status(404).json({ error: 'Homiy elementi topilmadi' });
     } else {

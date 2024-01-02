@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db'); 
+const { upload_file, put_file, delete_file } = require('../middleware/file_upload');
 
 // Get all companies
 router.get('/company', async (req, res) => {
@@ -36,8 +37,8 @@ router.get('/company/:id', async (req, res) => {
 
 // Create a new company
 router.post('/company', async (req, res) => {
-  const { phone1, phone2, image, worktime1, worktime2, address, email } = req.body;
-
+  const { phone1, phone2, worktime1, worktime2, address, email } = req.body;
+  var image=upload_file(req)
   try {
     const query =
       'INSERT INTO company (phone1, phone2, image, worktime1, worktime2, address, email) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
@@ -53,9 +54,11 @@ router.post('/company', async (req, res) => {
 // Update a company
 router.put('/company/:id', async (req, res) => {
   const { id } = req.params;
-  const { phone1, phone2, image, worktime1, worktime2, address, email } = req.body;
-
+  const { phone1, phone2,  worktime1, worktime2, address, email } = req.body;
+  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const result = await pool.query(query2, [id]);
   try {
+    var image=put_file(result.rows[0].image,req) 
     const query =
       'UPDATE company SET phone1 = $1, phone2 = $2, image = $3, worktime1 = $4, worktime2 = $5, address = $6, email = $7, time_update = current_timestamp WHERE id = $8 RETURNING *';
     const { rows } = await pool.query(query, [phone1, phone2, image, worktime1, worktime2, address, email, id]);
@@ -78,7 +81,7 @@ router.delete('/company/:id', async (req, res) => {
   try {
     const query = 'DELETE FROM company WHERE id = $1 RETURNING *';
     const { rows } = await pool.query(query, [id]);
-
+    delete_file(rows.image)
     if (rows.length === 0) {
       res.status(404).json({ error: 'Company not found' });
     } else {

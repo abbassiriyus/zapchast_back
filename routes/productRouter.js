@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db'); 
+const { put_file, upload_file, delete_file } = require('../middleware/file_upload');
 
 // Barcha product elementlarini olish
 router.get('/product', async (req, res) => {
@@ -42,7 +43,6 @@ router.post('/product', async (req, res) => {
     look_mor,
     kafolat,
     model,
-    image,
     davlat,
     maqola,
     ishlab_chiqaruvchi_id,
@@ -51,7 +51,7 @@ router.post('/product', async (req, res) => {
     sotishdan_oldin,
     free_mas,
   } = req.body;
-
+  var image=upload_file(req)
   try {
     const query =
       'INSERT INTO product (title, "desc", look_mor, kafolat, model, image, davlat, maqola, ishlab_chiqaruvchi_id, skitka, price, sotishdan_oldin, free_mas) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *';
@@ -87,7 +87,6 @@ router.put('/product/:id', async (req, res) => {
     look_mor,
     kafolat,
     model,
-    image,
     davlat,
     maqola,
     ishlab_chiqaruvchi_id,
@@ -96,8 +95,10 @@ router.put('/product/:id', async (req, res) => {
     sotishdan_oldin,
     free_mas,
   } = req.body;
-
+  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const result = await pool.query(query2, [id]);
   try {
+    var image=put_file(result.rows[0].image,req) 
     const query =
       'UPDATE product SET title = $1, "desc" = $2, look_mor = $3, kafolat = $4, model = $5, image = $6, davlat = $7, maqola = $8, ishlab_chiqaruvchi_id = $9, skitka = $10, price = $11, sotishdan_oldin = $12, free_mas = $13, time_update = current_timestamp WHERE id = $14 RETURNING *';
     const { rows } = await pool.query(query, [
@@ -135,7 +136,7 @@ router.delete('/product/:id', async (req, res) => {
   try {
     const query = 'DELETE FROM product WHERE id = $1 RETURNING *';
     const { rows } = await pool.query(query, [id]);
-
+    delete_file(rows.image)
     if (rows.length === 0) {
       res.status(404).json({ error: 'Product elementi topilmadi' });
     } else {
