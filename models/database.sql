@@ -174,5 +174,5 @@ create table qaytaqongiroq(
 )
 
 
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
-GRANT USAGE, SELECT ON SEQUENCE users_id_seq TO uzdubuz_id_rsa;
+ALTER SEQUENCE mark_id_seq OWNED BY mark.id;
+GRANT USAGE, SELECT ON SEQUENCE mark_id_seq TO uzdubuz_id_rsa;

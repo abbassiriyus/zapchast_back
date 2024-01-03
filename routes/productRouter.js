@@ -7,9 +7,23 @@ const { delete_file, put_file, upload_file } = require('../middleware/file_uploa
 router.get('/product', async (req, res) => {
   try {
     const query = 'SELECT * FROM product';
-    const { rows } = await pool.query(query);
+    const query1 = 'SELECT * FROM ishlab_chiqaruvchi';
 
-    res.json(rows);
+    const result = await pool.query(query);
+
+    const result1 = await pool.query(query1);
+for (let i = 0; i < result.rows.length; i++) {
+  result.rows[i].homiy=""
+ for (let j = 0; j < result1.rows.length; j++) {
+  if(result.rows[i].ishlab_chiqaruvchi_id===result1.rows[j].id){
+    result.rows[i].homiy=result1.rows[j].title
+  }
+ }
+}
+
+
+
+    res.json(result.rows);
   } catch (error) {
     console.error('Xatolik:', error);
     res.status(500).json({ error: error.message });
