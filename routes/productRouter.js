@@ -55,24 +55,24 @@ router.post('/product', async (req, res) => {
   var image=upload_file(req)
   try {
     const query =
-      'INSERT INTO product (title, desc, look_mor, kafolat, model, image, davlat, maqola, ishlab_chiqaruvchi_id, skitka, price, sotishdan_oldin, free_mas, subcategory_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *';
+      'INSERT INTO product (title, "desc", look_mor, kafolat, model, image, davlat, maqola, ishlab_chiqaruvchi_id, skitka, price, sotishdan_oldin, free_mas, subcategory_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *';
     const {
       rows,
     } = await pool.query(query, [
       title,
       desc,
-      look_mor,
+      look_mor*1,
       kafolat,
       model,
       image,
       davlat,
       maqola,
-      ishlab_chiqaruvchi_id,
-      skitka,
-      price,
+      ishlab_chiqaruvchi_id*1,
+      skitka*1,
+      price*1,
       sotishdan_oldin,
       free_mas,
-      subcategory_id,
+      subcategory_id*1,
     ]);
 
     res.json(rows[0]);
