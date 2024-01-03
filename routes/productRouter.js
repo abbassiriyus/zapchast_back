@@ -12,7 +12,7 @@ router.get('/product', async (req, res) => {
     res.json(rows);
   } catch (error) {
     console.error('Xatolik:', error);
-    res.status(500).json({ error: 'Xatolik yuz berdi' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -31,7 +31,7 @@ router.get('/product/:id', async (req, res) => {
     }
   } catch (error) {
     console.error('Xatolik:', error);
-    res.status(500).json({ error: 'Xatolik yuz berdi' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -78,7 +78,7 @@ router.post('/product', async (req, res) => {
     res.json(rows[0]);
   } catch (error) {
     console.error('Xatolik:', error);
-    res.status(500).json({ error: 'Xatolik yuz berdi' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -133,7 +133,7 @@ sotishdan_oldin,
     }
   } catch (error) {
     console.error('Xatolik:', error);
-    res.status(500).json({ error: 'Xatolik yuz berdi' });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -152,7 +152,7 @@ router.delete('/product/:id', async (req, res) => {
     }
   } catch (error) {
     console.error('Xatolik:', error);
-    res.status(500).json({ error: 'Xatolik yuz berdi' });
+    res.status(500).json({ error: error.message });
   }
 });
 
