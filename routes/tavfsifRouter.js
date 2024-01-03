@@ -55,7 +55,7 @@ router.post('/tavfsif', async (req, res) => {
 router.put('/tavfsif/:id', async (req, res) => {
   const { id } = req.params;
   const { title, desc } = req.body;
-  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const query2 = 'SELECT * FROM tavfsif WHERE id = $1';
   const result = await pool.query(query2, [id]);
   try {
     var image=put_file(result.rows[0].image,req) 

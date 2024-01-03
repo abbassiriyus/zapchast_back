@@ -55,7 +55,7 @@ router.post('/product_image', async (req, res) => {
 router.put('/product_image/:id', async (req, res) => {
   const { id } = req.params;
   const { product_id } = req.body;
-  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const query2 = 'SELECT * FROM product_image WHERE id = $1';
   const result = await pool.query(query2, [id]);
   try {
 

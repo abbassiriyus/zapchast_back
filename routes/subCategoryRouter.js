@@ -55,7 +55,7 @@ router.post('/subcategories', async (req, res) => {
 router.put('/subcategories/:id', async (req, res) => {
   const { id } = req.params;
   const { category_id, title } = req.body;
-  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const query2 = 'SELECT * FROM subcategories WHERE id = $1';
   const result = await pool.query(query2, [id]);
   try {
 

@@ -55,7 +55,7 @@ router.post('/product_sertificat', async (req, res) => {
 router.put('/product_sertificat/:id', async (req, res) => {
   const { id } = req.params;
   const {  product_id } = req.body;
-  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const query2 = 'SELECT * FROM product_sertificat WHERE id = $1';
   const result = await pool.query(query2, [id]);
   try {
 

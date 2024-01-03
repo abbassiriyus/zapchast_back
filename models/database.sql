@@ -77,17 +77,18 @@ create table product(
  "id" serial primary key,
  "title" text not null,
  "desc" text not null,
- "look_mor" integer default 0,
+ "look_mor" integer default 0 not null,
  "kafolat" integer default 0 not null,
  "model" varchar(50) not null,
  "image" text not null,
- "davlat" varchar(50) not null,
+ "davlat" varchar(50),
  "maqola" varchar(50) not null,
  "ishlab_chiqaruvchi_id" integer not null,
- "skitka" integer default 0,
+ "skitka" integer default 0 not null,
  "price" integer not null,
- "sotishdan_oldin" boolean default false,
- "free_mas" boolean default false,
+ "sotishdan_oldin" boolean default sotishdan_oldin not null,
+ "free_mas" boolean default false not null,
+ "subcategory_id" integer not null,
  "time_create" timestamp default current_timestamp not null,
  "time_update" timestamp default current_timestamp not null
 );
@@ -173,5 +174,5 @@ create table qaytaqongiroq(
 )
 
 
-ALTER SEQUENCE tarjima_id_seq OWNED BY tarjima.id;
-GRANT USAGE, SELECT ON SEQUENCE tarjima_id_seq TO uzdubuz_id_rsa;
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+GRANT USAGE, SELECT ON SEQUENCE users_id_seq TO uzdubuz_id_rsa;

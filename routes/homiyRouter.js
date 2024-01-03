@@ -55,7 +55,7 @@ router.post('/homiy', async (req, res) => {
 router.put('/homiy/:id', async (req, res) => {
   const { id } = req.params;
   const { link } = req.body;
-  const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
+  const query2 = 'SELECT * FROM homiy WHERE id = $1';
   const result = await pool.query(query2, [id]);
   try {
     var image=put_file(result.rows[0].image,req) 
