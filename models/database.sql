@@ -49,7 +49,7 @@ create table homiy(
 
 create table ishlab_chiqaruvchi(
  "id" serial primary key,
- "title" varchar(100) not null,
+ "title" varchar(200) not null,
  "time_create" timestamp default current_timestamp not null,
  "time_update" timestamp default current_timestamp not null
 );
@@ -86,7 +86,7 @@ create table product(
  "ishlab_chiqaruvchi_id" integer not null,
  "skitka" integer default 0 not null,
  "price" integer not null,
- "sotishdan_oldin" boolean default sotishdan_oldin not null,
+ "sotishdan_oldin" boolean default false not null,
  "free_mas" boolean default false not null,
  "subcategory_id" integer not null,
  "time_create" timestamp default current_timestamp not null,

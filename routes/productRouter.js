@@ -15,12 +15,13 @@ router.get('/product', async (req, res) => {
 for (let i = 0; i < result.rows.length; i++) {
   result.rows[i].homiy=""
  for (let j = 0; j < result1.rows.length; j++) {
-  if(result.rows[i].ishlab_chiqaruvchi_id===result1.rows[j].id){
+  if(result.rows[i].ishlab_chiqaruvchi_id==result1.rows[j].id){
     result.rows[i].homiy=result1.rows[j].title
   }
  }
 }
 
+console.log(result.rows);
 
 
     res.json(result.rows);
