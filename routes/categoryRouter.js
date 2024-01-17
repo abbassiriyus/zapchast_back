@@ -6,7 +6,7 @@ const router = express.Router();
 // Barcha kategoriyalarni olish
 router.get('/categories', async (req, res) => {
   try {
-    const query = 'SELECT * FROM category';
+    const query = 'SELECT * FROM categories';
     const { rows } = await pool.query(query);
 
     res.json(rows);
