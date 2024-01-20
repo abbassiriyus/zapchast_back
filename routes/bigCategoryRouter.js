@@ -81,11 +81,11 @@ router.delete('/bigcategories/:id', async (req, res) => {
     const query = 'DELETE FROM bigcategories WHERE id = $1 RETURNING *';
     const { rows } = await pool.query(query, [id]);
 
-    delete_file(rows.image)
+    // delete_file(rows.image)
     if (rows.length === 0) {
       res.status(404).json({ error: 'Kategoriya topilmadi' });
     } else {
-      res.json({ message: 'Kategoriya ochirildi' });
+      res.status(203).json({ message: 'Kategoriya ochirildi' });
     }
   } catch (error) {
     console.error('Xatolik:', error);
