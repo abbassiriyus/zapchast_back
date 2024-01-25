@@ -80,7 +80,7 @@ router.delete('/homiy/:id', async (req, res) => {
   try {
     const query = 'DELETE FROM homiy WHERE id = $1 RETURNING *';
     const { rows } = await pool.query(query, [id]);
-    delete_file(rows.image)
+    delete_file(rows[0].image)
     if (rows.length === 0) {
       res.status(404).json({ error: 'Homiy elementi topilmadi' });
     } else {
