@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db.js');
-
+const jwt=require('jsonwebtoken')
 
 router.post('/send-email', async (req, res) => {
   const { email } = req.body;
