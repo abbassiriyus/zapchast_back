@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Create token with API secret
-    const jwtToken = jwt.sign({ id: user.id, name: user.name, email: email }, SECRET, { expiresIn: '1h' });
+    const jwtToken = jwt.sign({ id: user.id, name: user.name, email: email },"SECRET", { expiresIn: '1h' });
     pool.query('UPDATE users SET token=$1 WHERE id = $2', [jwtToken, user.id])
 
     // Send back the token
