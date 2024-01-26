@@ -83,10 +83,10 @@ router.post('/login', async (req, res) => {
 
     // Create token with API secret
     const jwtToken = jwt.sign({ id: user.id, name: user.name, email: email },"SECRET", { expiresIn: '1h' });
-    pool.query('UPDATE users SET token=$1 WHERE id = $2', [jwtToken, user.id])
+   
 
     // Send back the token
-    res.json({ token: jwtToken, message: 'You have successfully logged in!' });
+    res.status(200).json({ token: jwtToken, message: 'You have successfully logged in!' });
 
   } catch (err) {
     // set status code to 400 for client errors and provide error message
