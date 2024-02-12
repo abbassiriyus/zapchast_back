@@ -1,11 +1,12 @@
 const pool = require('../db'); 
 const express = require('express');
 const { upload_file, put_file, delete_file } = require('../middleware/file_upload');
+const { validateJWT }=require("../middleware/middleware")
 const router = express.Router();
 
 
 // Barcha kattalar ro'yxatini olish
-router.get('/bigcategories', async (req, res) => {
+router.get('/bigcategories',  async (req, res) => {
   try {
     const query = 'SELECT * FROM bigcategories';
     const { rows } = await pool.query(query);
@@ -18,7 +19,7 @@ router.get('/bigcategories', async (req, res) => {
 });
 
 // Kategoriyani olish
-router.get('/bigcategories/:id', async (req, res) => {
+router.get('/bigcategories/:id',validateJWT, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -37,7 +38,7 @@ router.get('/bigcategories/:id', async (req, res) => {
 });
 
 // Kategoriyani qo'shish
-router.post('/bigcategories', async (req, res) => {
+router.post('/bigcategories',validateJWT, async (req, res) => {
   const { title } = req.body;
 var image=upload_file(req)
   try {
@@ -52,7 +53,7 @@ var image=upload_file(req)
 });
 
 // Kategoriyani yangilash
-router.put('/bigcategories/:id', async (req, res) => {
+router.put('/bigcategories/:id',validateJWT, async (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   const query2 = 'SELECT * FROM bigcategories WHERE id = $1';
@@ -75,7 +76,7 @@ router.put('/bigcategories/:id', async (req, res) => {
 });
 
 // Kategoriyani o'chirish
-router.delete('/bigcategories/:id', async (req, res) => {
+router.delete('/bigcategories/:id',validateJWT, async (req, res) => {
   const { id } = req.params;
   try{
     const query = 'DELETE FROM bigcategories WHERE id = $1 RETURNING *';

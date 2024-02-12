@@ -17,7 +17,7 @@ const validateJWT = (req, res, next) => {
       };
       try {
         // Verify makes sure that the token hasn't expired and has been issued by us.
-        result = jwt.verify(token, SECRET, options);
+        result = jwt.verify(token, "SECRET", options);
         // Let's pass back the decoded token to the request object.
         req.user = result;
         // Call next to pass execution to the subsequent middleware.
@@ -34,4 +34,4 @@ const validateJWT = (req, res, next) => {
       res.status(401).send(result);
     }
   }
-  
+  module.exports={validateJWT}

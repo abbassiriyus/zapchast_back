@@ -72,7 +72,8 @@ router.post('/login', async (req, res) => {
 
     // Check if User exists
     if (!user) {
-      return res.status(400).json({ error: 'User does not exist.' })
+      return res.status(400).json({ error: 
+        'User does not exist.' })
     }
 
     // Compare passwords
